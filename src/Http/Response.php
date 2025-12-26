@@ -26,6 +26,14 @@ class Response
     }
 
     /**
+     * Alias for successful().
+     */
+    public function isSuccessful(): bool
+    {
+        return $this->successful();
+    }
+
+    /**
      * Check if the response failed.
      */
     public function failed(): bool

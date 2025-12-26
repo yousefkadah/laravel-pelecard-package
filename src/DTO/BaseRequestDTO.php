@@ -2,6 +2,8 @@
 
 namespace Yousefkadah\Pelecard\DTO;
 
+use Yousefkadah\Pelecard\Exceptions\ValidationException;
+
 abstract class BaseRequestDTO
 {
     /**

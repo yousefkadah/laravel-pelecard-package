@@ -3,13 +3,14 @@
 namespace Yousefkadah\Pelecard\Exceptions;
 
 use Exception;
+use Throwable;
 
 class PelecardException extends Exception
 {
     /**
      * Create a new Pelecard exception instance.
      */
-    public function __construct(string $message = '', int $code = 0, ?Exception $previous = null)
+    public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

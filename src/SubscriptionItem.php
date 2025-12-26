@@ -5,6 +5,14 @@ namespace Yousefkadah\Pelecard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $subscription_id
+ * @property string $pelecard_plan
+ * @property int $quantity
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class SubscriptionItem extends Model
 {
     protected $table = 'subscription_items';

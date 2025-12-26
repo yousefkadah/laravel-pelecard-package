@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Crypt;
 
+/**
+ * @property int $id
+ * @property string $owner_type
+ * @property int|string $owner_id
+ * @property string $terminal
+ * @property string $user
+ * @property string $password
+ * @property string $environment
+ * @property bool $is_active
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class PelecardCredentials extends Model
 {
     protected $table = 'pelecard_credentials';

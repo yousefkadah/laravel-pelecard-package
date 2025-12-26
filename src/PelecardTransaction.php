@@ -5,6 +5,18 @@ namespace Yousefkadah\Pelecard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $pelecard_transaction_id
+ * @property string $type
+ * @property int $amount
+ * @property string $currency
+ * @property string $status
+ * @property array $metadata
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class PelecardTransaction extends Model
 {
     protected $table = 'pelecard_transactions';

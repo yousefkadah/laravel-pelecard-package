@@ -47,7 +47,7 @@ class PaymentMethod
             return false;
         }
 
-        $expiryDate = \Carbon\Carbon::createFromDate($this->expiry_year, $this->expiry_month, 1)->endOfMonth();
+        $expiryDate = \Carbon\Carbon::createFromDate((int) $this->expiry_year, (int) $this->expiry_month, 1)->endOfMonth();
 
         return $expiryDate->isPast();
     }
