@@ -12,7 +12,7 @@ class TokenExtractor
      */
     public static function extractToken(Response $response): ?string
     {
-        if (!$response->isSuccessful()) {
+        if (! $response->isSuccessful()) {
             return null;
         }
 

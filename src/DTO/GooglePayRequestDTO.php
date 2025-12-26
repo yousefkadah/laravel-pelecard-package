@@ -26,7 +26,7 @@ class GooglePayRequestDTO extends BaseRequestDTO
             'phone' => $this->phone,
             'payments' => $this->payments,
             'metadata' => $this->metadata,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void
@@ -35,7 +35,7 @@ class GooglePayRequestDTO extends BaseRequestDTO
             throw ValidationException::invalidField('amount', 'Amount must be greater than 0');
         }
 
-        if (empty($this->googlePayToken)) {
+        if ($this->googlePayToken === '' || $this->googlePayToken === '0') {
             throw ValidationException::missingField('google_pay_token');
         }
     }

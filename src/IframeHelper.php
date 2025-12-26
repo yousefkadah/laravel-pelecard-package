@@ -4,32 +4,25 @@ namespace Yousefkadah\Pelecard;
 
 class IframeHelper
 {
-    protected PelecardClient $client;
-
     /**
      * Create a new iframe helper instance.
      */
-    public function __construct(PelecardClient $client)
-    {
-        $this->client = $client;
-    }
+    public function __construct(protected PelecardClient $client) {}
 
     /**
      * Generate iframe URL for payment page.
      */
     public function generatePaymentUrl(array $data): string
     {
-        $baseUrl = $this->client->getEnvironment() === 'sandbox'
-            ? 'https://gateway20.pelecard.biz'
-            : 'https://gateway21.pelecard.biz';
-
+        if ($this->client->getEnvironment() === 'sandbox') {
+        }
 
         $params = [
             'terminalNumber' => $this->client->getTerminal(),
             'user' => $this->client->getUser(),
             'password' => $this->client->getPassword(),
             'shopNo' => $data['shop_number'] ?? config('pelecard.shop_number', '001'), // Sandbox label is ShopNo
-            'total' => $data['amount'], 
+            'total' => $data['amount'],
             'currency' => $data['currency'] ?? config('pelecard.currency', 'ILS'),
             'goodUrl' => $data['success_url'] ?? '',
             'errorUrl' => $data['error_url'] ?? '',
@@ -96,7 +89,9 @@ class IframeHelper
                 // Handle booleans that need '1' or '0'
                 if (in_array($dataKey, ['hide_pelecard_logo', 'show_confirmation', 'disable_zoom', 'hidden_pci_logo', 'hidden_ssl_seal', 'force_tov_card', 'open_confirmation_box_in_modal', 'placeholder_captions', 'show_brand_logo', 'show_submit_button', 'show_x_param', 'user_no_scalable'])) {
                     $params[$paramName] = $data[$dataKey] ? '1' : '0';
-                    if ($dataKey === 'show_brand_logo') $params[$paramName] = $data[$dataKey] ? 'True' : 'False'; // Some might need 'True'/'False' string based on docs
+                    if ($dataKey === 'show_brand_logo') {
+                        $params[$paramName] = $data[$dataKey] ? 'True' : 'False';
+                    } // Some might need 'True'/'False' string based on docs
                 } else {
                     $params[$paramName] = $data[$dataKey];
                 }
@@ -105,27 +100,27 @@ class IframeHelper
 
         // --- Behavior Settings ---
         $behaviorParams = [
-             'addHolderNameToXParam' => 'add_holder_name_to_x_param',
-             'addRemarksToXParam' => 'add_remarks_to_x_param',
-             'allowedBINs' => 'allowed_bins',
-             'blockedBINs' => 'blocked_bins',
-             'j5AsJ2ForBINS' => 'j5_as_j2_for_bins',
-             'inputErrorDisplayByField' => 'input_error_display_by_field',
-             'customErrorHandling' => 'custom_error_handling',
-             'errorClass' => 'error_class',
-             'requiredValidatedClass' => 'required_validated_class',
-             'userKey' => 'user_key',
-             'takeIshurPopUp' => 'take_ishur_pop_up',
+            'addHolderNameToXParam' => 'add_holder_name_to_x_param',
+            'addRemarksToXParam' => 'add_remarks_to_x_param',
+            'allowedBINs' => 'allowed_bins',
+            'blockedBINs' => 'blocked_bins',
+            'j5AsJ2ForBINS' => 'j5_as_j2_for_bins',
+            'inputErrorDisplayByField' => 'input_error_display_by_field',
+            'customErrorHandling' => 'custom_error_handling',
+            'errorClass' => 'error_class',
+            'requiredValidatedClass' => 'required_validated_class',
+            'userKey' => 'user_key',
+            'takeIshurPopUp' => 'take_ishur_pop_up',
         ];
 
-         foreach ($behaviorParams as $paramName => $dataKey) {
+        foreach ($behaviorParams as $paramName => $dataKey) {
             if (isset($data[$dataKey])) {
-                 // Check for True/False string requirements or 1/0
-                 if (in_array($dataKey, ['add_holder_name_to_x_param', 'add_remarks_to_x_param', 'j5_as_j2_for_bins', 'input_error_display_by_field', 'take_ishur_pop_up'])) {
-                     $params[$paramName] = $data[$dataKey] ? '1' : '0'; // Assuming 1/0 is standard
-                 } else {
+                // Check for True/False string requirements or 1/0
+                if (in_array($dataKey, ['add_holder_name_to_x_param', 'add_remarks_to_x_param', 'j5_as_j2_for_bins', 'input_error_display_by_field', 'take_ishur_pop_up'])) {
+                    $params[$paramName] = $data[$dataKey] ? '1' : '0'; // Assuming 1/0 is standard
+                } else {
                     $params[$paramName] = $data[$dataKey];
-                 }
+                }
             }
         }
 
@@ -139,28 +134,27 @@ class IframeHelper
             'applePay' => 'apple_pay', // Enable Apple Pay
         ];
 
-         foreach ($walletParams as $paramName => $dataKey) {
+        foreach ($walletParams as $paramName => $dataKey) {
             if (isset($data[$dataKey])) {
                 if ($dataKey === 'enable_bit') {
-                     $params['bit'] = $data[$dataKey] ? 'True' : 'False';
+                    $params['bit'] = $data[$dataKey] ? 'True' : 'False';
                 } elseif (in_array($dataKey, ['google_pay', 'apple_pay'])) {
-                     $params[$paramName] = $data[$dataKey] ? 'True' : 'False';
+                    $params[$paramName] = $data[$dataKey] ? 'True' : 'False';
                 } else {
-                     $params[$paramName] = $data[$dataKey];
+                    $params[$paramName] = $data[$dataKey];
                 }
             }
         }
 
-        
         // Sandbox also showed ParamZ, even though API docs says maybe not? User requested.
         // User said: "the page sort of include many parameters that i doont see in the iframe helper"
         // Sandbox has ParamZ input. Let's add it back if user wants it for iframe specifically.
         // Earlier user said "put the zparameter is not on iframe" but now "page include many params".
-        // Let's assume if it's on the Sandbox page (which I saw), it MIGHT be supported. 
+        // Let's assume if it's on the Sandbox page (which I saw), it MIGHT be supported.
         // But safer to stick to what I saw: ParamZ WAS on the page list from browser agent!
         // "ParamZ" was in the list! So I will re-add it cautiously.
         if (isset($data['param_z'])) {
-             $params['paramZ'] = $data['param_z'];
+            $params['paramZ'] = $data['param_z'];
         }
 
         // 3D Secure support
@@ -219,7 +213,7 @@ class IframeHelper
 
         $attributesString = '';
         foreach ($attributes as $key => $value) {
-            $attributesString .= sprintf(' %s="%s"', $key, htmlspecialchars($value));
+            $attributesString .= sprintf(' %s="%s"', $key, htmlspecialchars((string) $value));
         }
 
         return sprintf('<iframe src="%s"%s></iframe>', htmlspecialchars($url), $attributesString);
@@ -246,7 +240,7 @@ class IframeHelper
 
         $html = '<form';
         foreach ($formAttributes as $key => $value) {
-            $html .= sprintf(' %s="%s"', $key, htmlspecialchars($value));
+            $html .= sprintf(' %s="%s"', $key, htmlspecialchars((string) $value));
         }
         $html .= '>';
 
@@ -254,14 +248,13 @@ class IframeHelper
             $html .= sprintf(
                 '<input type="hidden" name="%s" value="%s">',
                 htmlspecialchars($key),
-                htmlspecialchars($value)
+                htmlspecialchars((string) $value)
             );
         }
 
         $html .= '<button type="submit">Pay Now</button>';
-        $html .= '</form>';
 
-        return $html;
+        return $html.'</form>';
     }
 
     /**

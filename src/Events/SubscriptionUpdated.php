@@ -8,17 +8,11 @@ use Yousefkadah\Pelecard\Subscription;
 
 class SubscriptionUpdated
 {
-    use Dispatchable, SerializesModels;
-
-    public Subscription $subscription;
-    public ?string $oldPlan;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Subscription $subscription, ?string $oldPlan = null)
-    {
-        $this->subscription = $subscription;
-        $this->oldPlan = $oldPlan;
-    }
+    public function __construct(public Subscription $subscription, public ?string $oldPlan = null) {}
 }

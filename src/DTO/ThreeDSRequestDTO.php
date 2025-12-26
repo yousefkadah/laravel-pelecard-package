@@ -34,7 +34,7 @@ class ThreeDSRequestDTO extends BaseRequestDTO
             'success_url' => $this->successUrl,
             'error_url' => $this->errorUrl,
             'metadata' => $this->metadata,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void

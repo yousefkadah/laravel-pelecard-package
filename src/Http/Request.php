@@ -6,16 +6,12 @@ use Yousefkadah\Pelecard\Exceptions\ValidationException;
 
 class Request
 {
-    protected array $data = [];
     protected array $requiredFields = [];
 
     /**
      * Create a new request instance.
      */
-    public function __construct(array $data = [])
-    {
-        $this->data = $data;
-    }
+    public function __construct(protected array $data = []) {}
 
     /**
      * Set required fields for validation.

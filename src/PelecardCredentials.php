@@ -59,7 +59,7 @@ class PelecardCredentials extends Model
     {
         try {
             return Crypt::decryptString($this->password);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If decryption fails, assume it's already plain text (for backward compatibility)
             return $this->password;
         }

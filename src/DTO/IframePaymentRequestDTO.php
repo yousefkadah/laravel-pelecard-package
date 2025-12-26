@@ -46,7 +46,7 @@ class IframePaymentRequestDTO extends BaseRequestDTO
             'customer_name' => $this->customerName,
             'email' => $this->email,
             'phone' => $this->phone,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void

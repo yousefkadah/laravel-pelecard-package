@@ -27,7 +27,7 @@ class InvoiceRequestDTO extends BaseRequestDTO
             'customer_phone' => $this->customerPhone,
             'customer_address' => $this->customerAddress,
             'metadata' => $this->metadata,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void

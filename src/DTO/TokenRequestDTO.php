@@ -21,7 +21,7 @@ class TokenRequestDTO extends BaseRequestDTO
             'expiry_year' => $this->expiryYear,
             'card_holder_name' => $this->cardHolderName,
             'card_holder_id' => $this->cardHolderId,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void

@@ -3,8 +3,6 @@
 namespace Yousefkadah\Pelecard;
 
 use Illuminate\Support\ServiceProvider;
-use Yousefkadah\Pelecard\Console\SyncSubscriptionsCommand;
-use Yousefkadah\Pelecard\Console\WebhookCommand;
 
 class PelecardServiceProvider extends ServiceProvider
 {
@@ -18,14 +16,12 @@ class PelecardServiceProvider extends ServiceProvider
             'pelecard'
         );
 
-        $this->app->singleton(PelecardClient::class, function ($app) {
-            return new PelecardClient(
-                terminal: config('pelecard.terminal'),
-                user: config('pelecard.user'),
-                password: config('pelecard.password'),
-                environment: config('pelecard.environment')
-            );
-        });
+        $this->app->singleton(PelecardClient::class, fn ($app): \Yousefkadah\Pelecard\PelecardClient => new PelecardClient(
+            terminal: config('pelecard.terminal'),
+            user: config('pelecard.user'),
+            password: config('pelecard.password'),
+            environment: config('pelecard.environment')
+        ));
 
         $this->app->alias(PelecardClient::class, 'pelecard');
     }
@@ -58,4 +54,5 @@ class PelecardServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/views' => resource_path('views/vendor/pelecard'),
             ], 'pelecard-views');
         }
-    }}
+    }
+}

@@ -8,15 +8,11 @@ use Yousefkadah\Pelecard\Subscription;
 
 class SubscriptionCreated
 {
-    use Dispatchable, SerializesModels;
-
-    public Subscription $subscription;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Subscription $subscription)
-    {
-        $this->subscription = $subscription;
-    }
+    public function __construct(public Subscription $subscription) {}
 }

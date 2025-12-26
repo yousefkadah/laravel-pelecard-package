@@ -35,6 +35,7 @@ class SyncSubscriptionsCommand extends Command
 
         if ($subscriptions->isEmpty()) {
             $this->warn('No subscriptions found to sync.');
+
             return self::SUCCESS;
         }
 

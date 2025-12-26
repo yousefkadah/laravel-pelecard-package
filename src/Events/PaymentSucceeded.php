@@ -8,17 +8,11 @@ use Yousefkadah\Pelecard\Http\Response;
 
 class PaymentSucceeded
 {
-    use Dispatchable, SerializesModels;
-
-    public Response $response;
-    public $billable;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Response $response, $billable = null)
-    {
-        $this->response = $response;
-        $this->billable = $billable;
-    }
+    public function __construct(public Response $response, public $billable = null) {}
 }

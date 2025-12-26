@@ -22,13 +22,13 @@ class TransactionQueryDTO extends BaseRequestDTO
             'from_date' => $this->fromDate,
             'to_date' => $this->toDate,
             'filters' => $this->filters,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void
     {
         // At least one identifier should be provided
-        if (!$this->transactionId && !$this->uniqueId && !$this->uid && !$this->fromDate) {
+        if (! $this->transactionId && ! $this->uniqueId && ! $this->uid && ! $this->fromDate) {
             throw new \InvalidArgumentException('At least one identifier or date filter is required');
         }
     }

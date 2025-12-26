@@ -40,7 +40,7 @@ class ChargeRequestDTO extends BaseRequestDTO
             'metadata' => $this->metadata,
         ];
 
-        return $this->addCommonParams(array_filter($data, fn($value) => $value !== null));
+        return $this->addCommonParams(array_filter($data, fn ($value): bool => $value !== null));
     }
 
     public function validate(): void
@@ -50,12 +50,12 @@ class ChargeRequestDTO extends BaseRequestDTO
         }
 
         // Either card details or token must be provided
-        if (!$this->token && !$this->cardNumber) {
+        if (! $this->token && ! $this->cardNumber) {
             throw ValidationException::missingField('card_number or token');
         }
 
         // If using card, all card fields are required
-        if ($this->cardNumber && (!$this->expiryMonth || !$this->expiryYear || !$this->cvv)) {
+        if ($this->cardNumber && (! $this->expiryMonth || ! $this->expiryYear || ! $this->cvv)) {
             throw ValidationException::missingField('expiry_month, expiry_year, and cvv are required when using card_number');
         }
     }

@@ -22,7 +22,7 @@ class RefundRequestDTO extends BaseRequestDTO
             'currency' => $this->currency,
             'reason' => $this->reason,
             'metadata' => $this->metadata,
-        ], fn($value) => $value !== null);
+        ], fn ($value): bool => $value !== null);
     }
 
     public function validate(): void

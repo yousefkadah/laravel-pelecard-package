@@ -16,6 +16,7 @@ class InvoiceBuilder
     public function number(string $number): self
     {
         $this->data['invoice_number'] = $number;
+
         return $this;
     }
 
@@ -28,6 +29,7 @@ class InvoiceBuilder
             $date = $date->format('Y-m-d');
         }
         $this->data['invoice_date'] = $date;
+
         return $this;
     }
 
@@ -40,6 +42,7 @@ class InvoiceBuilder
             $date = $date->format('Y-m-d');
         }
         $this->data['due_date'] = $date;
+
         return $this;
     }
 
@@ -49,6 +52,7 @@ class InvoiceBuilder
     public function customer(array $customer): self
     {
         $this->data['customer'] = $customer;
+
         return $this;
     }
 
@@ -58,6 +62,7 @@ class InvoiceBuilder
     public function vendor(array $vendor): self
     {
         $this->data['vendor'] = $vendor;
+
         return $this;
     }
 
@@ -67,6 +72,7 @@ class InvoiceBuilder
     public function items(array $items): self
     {
         $this->data['items'] = $items;
+
         return $this;
     }
 
@@ -75,7 +81,7 @@ class InvoiceBuilder
      */
     public function addItem(string $description, int $quantity, int $unitPrice, ?int $tax = null): self
     {
-        if (!isset($this->data['items'])) {
+        if (! isset($this->data['items'])) {
             $this->data['items'] = [];
         }
 
@@ -96,6 +102,7 @@ class InvoiceBuilder
     public function taxRate(float $rate): self
     {
         $this->data['tax_rate'] = $rate;
+
         return $this;
     }
 
@@ -105,6 +112,7 @@ class InvoiceBuilder
     public function notes(string $notes): self
     {
         $this->data['notes'] = $notes;
+
         return $this;
     }
 
@@ -114,6 +122,7 @@ class InvoiceBuilder
     public function terms(string $terms): self
     {
         $this->data['terms'] = $terms;
+
         return $this;
     }
 
@@ -123,6 +132,7 @@ class InvoiceBuilder
     public function template(string $template): self
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -132,6 +142,7 @@ class InvoiceBuilder
     public function currency(string $currency): self
     {
         $this->data['currency'] = $currency;
+
         return $this;
     }
 
@@ -168,7 +179,7 @@ class InvoiceBuilder
     public function build(): Invoice
     {
         $totals = $this->calculateTotals();
-        
+
         return new Invoice(array_merge($this->data, $totals));
     }
 
@@ -210,7 +221,7 @@ class InvoiceBuilder
     public function toInertia(): array
     {
         $invoice = $this->build();
-        
+
         return [
             'invoice' => [
                 'number' => $invoice->number(),

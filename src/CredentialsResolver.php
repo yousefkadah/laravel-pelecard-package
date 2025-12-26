@@ -28,6 +28,7 @@ class CredentialsResolver
 
             if ($credentials instanceof PelecardCredentials) {
                 $this->cache($billable, $credentials);
+
                 return $credentials;
             }
         }
@@ -43,18 +44,20 @@ class CredentialsResolver
 
             if ($credentials instanceof PelecardCredentials) {
                 $this->cache($billable, $credentials);
+
                 return $credentials;
             }
         }
 
         // Try polymorphic relationship
-        $credentials = PelecardCredentials::where('owner_type', get_class($billable))
+        $credentials = PelecardCredentials::where('owner_type', $billable::class)
             ->where('owner_id', $billable->getKey())
             ->active()
             ->first();
 
         if ($credentials) {
             $this->cache($billable, $credentials);
+
             return $credentials;
         }
 
@@ -116,7 +119,7 @@ class CredentialsResolver
     protected function getCacheKey(mixed $billable): string
     {
         $prefix = config('pelecard.cache.prefix', 'pelecard');
-        $class = str_replace('\\', '_', get_class($billable));
+        $class = str_replace('\\', '_', $billable::class);
         $id = $billable->getKey();
 
         return "{$prefix}_credentials_{$class}_{$id}";

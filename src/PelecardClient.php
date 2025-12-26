@@ -4,7 +4,6 @@ namespace Yousefkadah\Pelecard;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Yousefkadah\Pelecard\Exceptions\AuthenticationException;
 use Yousefkadah\Pelecard\Exceptions\PelecardException;
@@ -17,7 +16,6 @@ class PelecardClient
     protected string $terminal;
     protected string $user;
     protected string $password;
-    protected string $environment;
     protected string $baseUrl;
 
     /**
@@ -27,12 +25,11 @@ class PelecardClient
         ?string $terminal = null,
         ?string $user = null,
         ?string $password = null,
-        string $environment = 'sandbox'
+        protected string $environment = 'sandbox'
     ) {
         $this->terminal = $terminal ?? config('pelecard.terminal');
         $this->user = $user ?? config('pelecard.user');
         $this->password = $password ?? config('pelecard.password');
-        $this->environment = $environment;
 
         if (! $this->terminal || ! $this->user || ! $this->password) {
             throw AuthenticationException::missingCredentials();
@@ -48,6 +45,26 @@ class PelecardClient
                 'Content-Type' => 'application/json',
             ],
         ]);
+    }
+
+    public function getTerminal(): string
+    {
+        return $this->terminal;
+    }
+
+    public function getUser(): string
+    {
+        return $this->user;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
     }
 
     /**
@@ -589,9 +606,9 @@ class PelecardClient
      */
     public function getErrorMessage(string $errorCode, ?string $language = null): Response
     {
-        $language = $language ?? config('pelecard.language', 'he');
+        $language ??= config('pelecard.language', 'he');
 
-        return $language === 'en' 
+        return $language === 'en'
             ? $this->getErrorMessageEn($errorCode)
             : $this->getErrorMessageHe($errorCode);
     }
@@ -984,8 +1001,6 @@ class PelecardClient
         return $this->post('/GetTransReportDataBeforeBc', $request->toPelecardFormat());
     }
 
-
-
     /**
      * Make a POST request to Pelecard API.
      */
@@ -1093,14 +1108,6 @@ class PelecardClient
     public function iframe(): IframeHelper
     {
         return new IframeHelper($this);
-    }
-
-    /**
-     * Get terminal number.
-     */
-    public function getTerminal(): string
-    {
-        return $this->terminal;
     }
 
     /**

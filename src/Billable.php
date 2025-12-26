@@ -3,7 +3,9 @@
 namespace Yousefkadah\Pelecard;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Yousefkadah\Pelecard\Exceptions\PaymentException;
+use Yousefkadah\Pelecard\Events\PaymentFailed;
+use Yousefkadah\Pelecard\Events\PaymentSucceeded;
+use Yousefkadah\Pelecard\Http\Response;
 
 trait Billable
 {
@@ -74,6 +76,7 @@ trait Billable
     {
         if (config('pelecard.multi_tenant')) {
             $resolver = app(CredentialsResolver::class);
+
             return $resolver->resolve($this);
         }
 
@@ -153,7 +156,7 @@ trait Billable
         // If successful, extract and save the token
         if ($response->isSuccessful()) {
             $token = $response->get('Token');
-            
+
             if ($token) {
                 $this->updateDefaultPaymentMethod($token, [
                     'type' => 'card',
@@ -171,7 +174,6 @@ trait Billable
 
         return $response;
     }
-
 
     /**
      * Refund a transaction.
@@ -209,8 +211,8 @@ trait Billable
     public function updateDefaultPaymentMethodFromResponse(\Yousefkadah\Pelecard\Http\Response $response): bool
     {
         $token = \Yousefkadah\Pelecard\Helpers\TokenExtractor::extractToken($response);
-        
-        if (!$token) {
+
+        if (! $token) {
             return false;
         }
 

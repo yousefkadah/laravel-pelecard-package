@@ -3,23 +3,13 @@
 namespace Yousefkadah\Pelecard\Http;
 
 use Yousefkadah\Pelecard\Exceptions\PaymentException;
-use Yousefkadah\Pelecard\Exceptions\PelecardException;
 
 class Response
 {
-    protected array $data;
-    protected int $statusCode;
-    protected ?string $rawBody;
-
     /**
      * Create a new response instance.
      */
-    public function __construct(array $data, int $statusCode = 200, ?string $rawBody = null)
-    {
-        $this->data = $data;
-        $this->statusCode = $statusCode;
-        $this->rawBody = $rawBody;
-    }
+    public function __construct(protected array $data, protected int $statusCode = 200, protected ?string $rawBody = null) {}
 
     /**
      * Check if the response was successful.
@@ -64,7 +54,7 @@ class Response
      */
     public function getTransactionId(): ?string
     {
-        return $this->get('PelecardTransactionId') 
+        return $this->get('PelecardTransactionId')
             ?? $this->get('TransactionId')
             ?? $this->get('transaction_id');
     }
@@ -74,7 +64,7 @@ class Response
      */
     public function getAuthorizationNumber(): ?string
     {
-        return $this->get('AuthorizationNumber') 
+        return $this->get('AuthorizationNumber')
             ?? $this->get('ConfirmationNumber')
             ?? $this->get('authorization_number');
     }
@@ -84,7 +74,7 @@ class Response
      */
     public function getErrorMessage(): ?string
     {
-        return $this->get('ErrorMessage') 
+        return $this->get('ErrorMessage')
             ?? $this->get('Error')
             ?? $this->get('error_message')
             ?? $this->get('message');
@@ -95,7 +85,7 @@ class Response
      */
     public function getErrorCode(): ?string
     {
-        return $this->get('StatusCode') 
+        return $this->get('StatusCode')
             ?? $this->get('ErrorCode')
             ?? $this->get('error_code');
     }

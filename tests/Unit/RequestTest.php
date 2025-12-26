@@ -8,7 +8,7 @@ use Yousefkadah\Pelecard\Tests\TestCase;
 class RequestTest extends TestCase
 {
     /** @test */
-    public function it_can_create_a_request_with_data()
+    public function it_can_create_a_request_with_data(): void
     {
         $request = Request::make(['amount' => 1000, 'currency' => 'ILS']);
 
@@ -17,16 +17,16 @@ class RequestTest extends TestCase
     }
 
     /** @test */
-    public function it_can_set_and_get_data()
+    public function it_can_set_and_get_data(): void
     {
-        $request = new Request();
+        $request = new Request;
         $request->set('amount', 5000);
 
         $this->assertEquals(5000, $request->get('amount'));
     }
 
     /** @test */
-    public function it_converts_to_pascal_case()
+    public function it_converts_to_pascal_case(): void
     {
         $request = Request::make([
             'amount' => 1000,
@@ -42,7 +42,7 @@ class RequestTest extends TestCase
     }
 
     /** @test */
-    public function it_validates_required_fields()
+    public function it_validates_required_fields(): void
     {
         $this->expectException(\Yousefkadah\Pelecard\Exceptions\ValidationException::class);
 

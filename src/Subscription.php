@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string $pelecard_subscription_id
+ * @property string $pelecard_plan
+ * @property int $quantity
+ * @property \Carbon\Carbon|null $trial_ends_at
+ * @property \Carbon\Carbon|null $ends_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class Subscription extends Model
 {
     protected $table = 'subscriptions';
@@ -56,7 +68,11 @@ class Subscription extends Model
      */
     public function valid(): bool
     {
-        return $this->onTrial() || ($this->recurring() && ! $this->cancelled());
+        if ($this->onTrial()) {
+            return true;
+        }
+
+        return $this->recurring() && ! $this->cancelled();
     }
 
     /**
@@ -104,8 +120,8 @@ class Subscription extends Model
      */
     public function cancel(): static
     {
-        $this->ends_at = $this->onTrial() 
-            ? $this->trial_ends_at 
+        $this->ends_at = $this->onTrial()
+            ? $this->trial_ends_at
             : Carbon::now()->addMonth();
 
         $this->save();
@@ -223,7 +239,7 @@ class Subscription extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where(function ($query) {
+        return $query->where(function ($query): void {
             $query->whereNull('ends_at')
                 ->orWhere('ends_at', '>', Carbon::now());
         });

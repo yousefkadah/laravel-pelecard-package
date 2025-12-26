@@ -45,7 +45,7 @@ class WebhookController extends Controller
     {
         // Pelecard webhook signature validation logic
         // This would depend on Pelecard's specific implementation
-        
+
         // Example:
         // $signature = $request->header('X-Pelecard-Signature');
         // if (!$this->isValidSignature($signature, $request->getContent())) {

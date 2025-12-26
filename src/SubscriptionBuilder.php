@@ -6,9 +6,6 @@ use Carbon\Carbon;
 
 class SubscriptionBuilder
 {
-    protected $owner;
-    protected string $name;
-    protected string $plan;
     protected int $quantity = 1;
     protected ?Carbon $trialEndsAt = null;
     protected bool $skipTrial = false;
@@ -17,12 +14,7 @@ class SubscriptionBuilder
     /**
      * Create a new subscription builder instance.
      */
-    public function __construct($owner, string $name, string $plan)
-    {
-        $this->owner = $owner;
-        $this->name = $name;
-        $this->plan = $plan;
-    }
+    public function __construct(protected \Illuminate\Database\Eloquent\Model $owner, protected string $name, protected string $plan) {}
 
     /**
      * Set the trial period in days.
@@ -87,10 +79,8 @@ class SubscriptionBuilder
         $trialEndsAt = $this->skipTrial ? null : $this->trialEndsAt;
 
         // If owner has generic trial, use it
-        if (! $this->skipTrial && ! $trialEndsAt && method_exists($this->owner, 'onGenericTrial')) {
-            if ($this->owner->onGenericTrial()) {
-                $trialEndsAt = $this->owner->trial_ends_at;
-            }
+        if (! $this->skipTrial && ! $trialEndsAt && method_exists($this->owner, 'onGenericTrial') && $this->owner->onGenericTrial()) {
+            $trialEndsAt = $this->owner->trial_ends_at;
         }
 
         // Create the subscription record
@@ -110,12 +100,10 @@ class SubscriptionBuilder
         }
 
         // If payment method provided and not on trial, charge immediately
-        if ($paymentMethod && ! $trialEndsAt) {
-            // This would integrate with Pelecard to set up recurring billing
-            // For now, we'll just store the payment method
-            if (method_exists($this->owner, 'updateDefaultPaymentMethod')) {
-                $this->owner->updateDefaultPaymentMethod($paymentMethod);
-            }
+        // This would integrate with Pelecard to set up recurring billing
+        // For now, we'll just store the payment method
+        if ($paymentMethod && ! $trialEndsAt && method_exists($this->owner, 'updateDefaultPaymentMethod')) {
+            $this->owner->updateDefaultPaymentMethod($paymentMethod);
         }
 
         event(new Events\SubscriptionCreated($subscription));
