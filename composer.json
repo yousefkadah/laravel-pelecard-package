@@ -1,5 +1,6 @@
 {
     "name": "yousefkadah/laravel-pelecard",
+    "version": "1.0.1",
     "description": "Laravel package for Pelecard payment gateway integration with Cashier-compatible subscription billing and multi-tenancy support",
     "keywords": [
         "laravel",

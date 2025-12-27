@@ -7,6 +7,15 @@ class IframeHelper
     /**
      * Create a new iframe helper instance.
      */
+    public const ACTION_TYPE_PAYMENT = 'J4';
+    public const ACTION_TYPE_AUTHORIZE = 'J5';
+    public const ACTION_TYPE_AUTHORIZE_HIDDEN = 'J5h';
+    public const ACTION_TYPE_REGISTRY = 'J2';
+    public const ACTION_TYPE_REGISTRY_SWIPE = 'J2S';
+
+    /**
+     * Create a new iframe helper instance.
+     */
     public function __construct(protected PelecardClient $client) {}
 
     /**
@@ -30,7 +39,7 @@ class IframeHelper
             'lang' => $data['language'] ?? 'he',
             'paramX' => $data['param_x'] ?? '',
             // Additional Sandbox params
-            'actionType' => $data['action_type'] ?? 'J2', // Default to J2 (Charge)
+            'actionType' => $data['action_type'] ?? self::ACTION_TYPE_REGISTRY, // Default to J2 (Registry)
             'authNum' => $data['auth_num'] ?? '',
             'firstPayment' => $data['first_payment'] ?? '',
             'firstPaymentLock' => isset($data['first_payment_lock']) ? ($data['first_payment_lock'] ? '1' : '0') : '',
